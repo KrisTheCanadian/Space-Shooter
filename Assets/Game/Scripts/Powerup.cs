@@ -42,9 +42,9 @@ public class Powerup : MonoBehaviour
                 {
                     player.SpeedBoostOn();
                 }
-                else 
+                else if(powerupID == 2)
                 {
-
+                    player.ShieldBoostOn();
                 }
             }
 

@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     private GameObject _playerExplosion;
     public bool canTripleShot = false;
     public int lives = 3;
-
+    public bool immune = false;
 
 
     [SerializeField]
@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
     private GameObject laserPrefab;
     [SerializeField]
     private GameObject _tripleShotPrefab;
+    [SerializeField]
+    private GameObject _shieldGameObject;
     
     [SerializeField]
     private float _speed = 5.0f;
@@ -69,15 +71,18 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
-        
-        if(lives > 0)
+        if (!immune)
         {
-            lives--;
+            if (lives > 0)
+            {
+                lives--;
+            }
+            else
+            {
+                Explode();
+            }
         }
-        else
-        {
-            Explode();
-        }
+
     }
 
     private void Explode()
@@ -94,6 +99,7 @@ public class Player : MonoBehaviour
 
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
+        
 
 
         transform.Translate(Vector3.right * _speed * horizontalInput * Time.deltaTime);
@@ -143,5 +149,20 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
 
         _speed = _speed - 5f;
+    }
+
+    public void ShieldBoostOn()
+    {
+        immune = true;
+        _shieldGameObject.SetActive(true);
+        StartCoroutine(ShieldBoostDownRoutine());
+    }
+
+    public IEnumerator ShieldBoostDownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+
+        _shieldGameObject.SetActive(false);
+        immune = false;
     }
 }
